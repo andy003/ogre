@@ -29,7 +29,7 @@ endif ()
 
 
 # repeat for PCH
-include_directories("${PROJECT_SOURCE_DIR}/OgreMain/include" "${PROJECT_BINARY_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/src")
+include_directories("${PROJECT_SOURCE_DIR}/OgreMain/include" "${PROJECT_BINARY_DIR}/include" "include" "src")
 
 generate_export_header(OgreRTShaderSystem
         EXPORT_MACRO_NAME _OgreRTSSExport

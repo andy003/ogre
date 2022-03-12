@@ -44,7 +44,7 @@ target_link_libraries(OgreTerrain PUBLIC OgreMain OgreRTShaderSystem)
 target_include_directories(OgreTerrain PUBLIC 
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
   $<INSTALL_INTERFACE:include/OGRE/Terrain>
-  PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+  PRIVATE "src")
 
 if (OGRE_BUILD_COMPONENT_PAGING)
 	target_link_libraries(OgreTerrain PUBLIC OgrePaging)

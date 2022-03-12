@@ -7,7 +7,7 @@ set(OGRE_VERSION_PATCH 0)
 
 set(OGRE_VERSION_SUFFIX "ccors")
 set(OGRE_VERSION_NAME "Tsathoggua")
-set(OGRE_TEMPLATES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates)
+set(OGRE_TEMPLATES_DIR CMake/Templates)
 
 include(GenerateExportHeader)
 include(CMake/ConfigureBuild.cmake)

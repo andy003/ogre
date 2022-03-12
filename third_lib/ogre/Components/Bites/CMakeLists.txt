@@ -26,7 +26,7 @@ set(SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreTrays.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreWindowEventUtilities.cpp")
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
+include_directories("src")
 list(APPEND SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreWIN32ConfigDialog.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/resource.h"
