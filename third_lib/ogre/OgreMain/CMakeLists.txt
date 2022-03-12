@@ -24,24 +24,35 @@ MESSAGE(STATUS "sources ${SOURCE_FILES}")
 
 # Remove optional header files
 list(REMOVE_ITEM HEADER_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreDDSCodec.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/OgrePVRTCCodec.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreETCCodec.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreZip.h"
-)
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreDDSCodec.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/OgrePVRTCCodec.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreETCCodec.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreZip.h"
+        )
 
 # Remove optional source files
 list(REMOVE_ITEM SOURCE_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreFileSystemLayerNoOp.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreDDSCodec.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePVRTCCodec.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreETCCodec.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreZip.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreSearchOps.cpp"
-)
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreFileSystemLayerNoOp.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreDDSCodec.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePVRTCCodec.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreETCCodec.cpp"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreZip.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreSearchOps.cpp"
+        )
 
-add_library(OgreMain STATIC ${SOURCE_FILES} ${HEADER_FILES})
-target_include_directories(OgreMain PUBLIC include include/Threading src/zip "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>")
+file(GLOB PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/WIN32/*.cpp")
+list(APPEND PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/Threading/OgreDefaultWorkQueueStandard.cpp")
+list(APPEND PLATFORM_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/zip/zip.c")
+add_library(OgreMain STATIC ${SOURCE_FILES} ${HEADER_FILES} ${PLATFORM_SOURCE_FILES})
+target_include_directories(OgreMain
+        PUBLIC
+        include
+        include/Threading
+        src/zip
+        "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>"
+        PRIVATE
+        src
+        )
 
 generate_export_header(OgreMain
         EXPORT_MACRO_NAME _OgreExport

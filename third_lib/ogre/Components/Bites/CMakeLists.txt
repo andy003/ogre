@@ -58,15 +58,20 @@ generate_export_header(OgreBites
         EXPORT_MACRO_NAME _OgreBitesExport
         EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreBitesPrerequisites.h)
 
-#if(Qt6_FOUND OR Qt5_FOUND)
-#  if(Qt6_FOUND)
-#    qt6_wrap_cpp(MOC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreApplicationContextQt.h")
-#  else()
-#    qt5_wrap_cpp(MOC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreApplicationContextQt.h")
-#  endif()
-#
-#  add_library(OgreBitesQt ${OGRE_COMP_LIB_TYPE} ${MOC_SRC} "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreApplicationContextQt.cpp")
-#  set_target_properties(OgreBitesQt PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
-#  target_link_libraries(OgreBitesQt PUBLIC Qt${QT_VERSION_MAJOR}::Gui OgreBites)
-#  ogre_config_component(OgreBitesQt)
-#endif()
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "D:/Qt/5.15.2/msvc2019_64/lib/cmake")
+find_package(Qt5 COMPONENTS Core Gui Widgets QUIET)
+
+if(Qt6_FOUND OR Qt5_FOUND)
+  if(Qt6_FOUND)
+    qt6_wrap_cpp(MOC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreApplicationContextQt.h")
+  else()
+    qt5_wrap_cpp(MOC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreApplicationContextQt.h")
+  endif()
+
+  add_library(OgreBitesQt SHARED ${OGRE_COMP_LIB_TYPE} ${MOC_SRC} "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreApplicationContextQt.cpp")
+  set_target_properties(OgreBitesQt PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
+  target_link_libraries(OgreBitesQt PUBLIC Qt5::Core Qt5::Gui Qt5::Widgets OgreBites)
+endif()
