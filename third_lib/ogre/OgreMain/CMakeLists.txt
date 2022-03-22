@@ -61,7 +61,7 @@ generate_export_header(OgreMain
         EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreExports.h)
 
 if (MSVC)
-    target_compile_definitions(OgreMain PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(OgreMain PRIVATE _CRT_SECURE_NO_WARNINGS OGRE_BITES_STATIC_PLUGINS)
     target_compile_options(OgreMain PUBLIC /wd4305 /wd4819 /wd4244 /wd4267)
 endif ()
 

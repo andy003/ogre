@@ -41,10 +41,8 @@ source_group(Resources FILES ${RESOURCE_FILES})
 # setup target
 add_library(OgreBites ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCES})
 set_target_properties(OgreBites PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
-target_link_libraries(OgreBites PUBLIC OgreMain OgreOverlay PRIVATE OgreRTShaderSystem)
-if (OGRE_BUILD_COMPONENT_RTSHADERSYSTEM)
-    target_link_libraries(OgreBites PUBLIC OgreRTShaderSystem)
-endif ()
+target_link_libraries(OgreBites PUBLIC OgreMain OgreOverlay)
+target_link_libraries(OgreBites PUBLIC OgreRTShaderSystem RenderSystem_GL RenderSystem_GL3Plus)
 target_include_directories(OgreBites PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
         "$<BUILD_INTERFACE:${NATIVE_INCLUDES}>"
@@ -61,7 +59,7 @@ generate_export_header(OgreBites
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "D:/Qt/5.15.2/msvc2019_64/lib/cmake")
+
 find_package(Qt5 COMPONENTS Core Gui Widgets QUIET)
 
 if(Qt6_FOUND OR Qt5_FOUND)
@@ -71,7 +69,7 @@ if(Qt6_FOUND OR Qt5_FOUND)
     qt5_wrap_cpp(MOC_SRC "${CMAKE_CURRENT_SOURCE_DIR}/include/OgreApplicationContextQt.h")
   endif()
 
-  add_library(OgreBitesQt SHARED ${OGRE_COMP_LIB_TYPE} ${MOC_SRC} "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreApplicationContextQt.cpp")
+  add_library(OgreBitesQt ${OGRE_COMP_LIB_TYPE} ${MOC_SRC} "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreApplicationContextQt.cpp")
   set_target_properties(OgreBitesQt PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
   target_link_libraries(OgreBitesQt PUBLIC Qt5::Core Qt5::Gui Qt5::Widgets OgreBites)
 endif()

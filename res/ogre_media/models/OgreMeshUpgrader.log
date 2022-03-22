@@ -1,0 +1,27 @@
+15:29:43: Creating resource group General
+15:29:43: Creating resource group OgreInternal
+15:29:43: Creating resource group OgreAutodetect
+15:29:43: Registering ResourceManager for type Material
+15:29:43: Registering ResourceManager for type Skeleton
+15:29:43: Registering ResourceManager for type Mesh
+15:29:43: Warning: conversion uses an old format [MeshSerializer_v1.8]; upgrade with the OgreMeshUpgrader tool
+15:29:43: Generating edge lists...
+15:29:43: Generating edge lists... success
+15:29:43: MeshSerializer writing mesh data to stream rviz_sphere.mesh...
+15:29:43: File header written.
+15:29:43: Writing mesh data...
+15:29:43: Writing submesh...
+15:29:43: Exporting submesh texture aliases...
+15:29:43: Submesh texture aliases exported.
+15:29:43: Submesh exported.
+15:29:43: Exporting bounds information....
+15:29:43: Bounds information exported.
+15:29:43: Exporting submesh name table...
+15:29:43: Submesh name table exported.
+15:29:43: Exporting edge lists...
+15:29:43: Edge lists exported
+15:29:43: Mesh data exported.
+15:29:43: MeshSerializer export successful.
+15:29:43: Unregistering ResourceManager for type Mesh
+15:29:43: Unregistering ResourceManager for type Skeleton
+15:29:43: Unregistering ResourceManager for type Material

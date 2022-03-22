@@ -1,0 +1,22 @@
+15:44:59: Creating resource group General
+15:44:59: Creating resource group OgreInternal
+15:44:59: Creating resource group OgreAutodetect
+15:44:59: Registering ResourceManager for type Mesh
+15:44:59: Registering ResourceManager for type Material
+15:44:59: Registering ResourceManager for type Skeleton
+15:44:59: XMLMeshSerializer writing mesh data to E:\Desktop\ccrobot\bin\ogre_media\models\rviz_cylinder.mesh.xml...
+15:44:59: Populating DOM...
+15:44:59: Writing submesh...
+15:44:59: Dedicated geometry bone assignments exported.
+15:44:59: Submesh exported.
+15:44:59: Writing submesh...
+15:44:59: Dedicated geometry bone assignments exported.
+15:44:59: Submesh exported.
+15:44:59: Writing submesh...
+15:44:59: Dedicated geometry bone assignments exported.
+15:44:59: Submesh exported.
+15:44:59: DOM populated, writing XML file..
+15:44:59: XMLMeshSerializer export successful.
+15:44:59: Unregistering ResourceManager for type Skeleton
+15:44:59: Unregistering ResourceManager for type Material
+15:44:59: Unregistering ResourceManager for type Mesh

@@ -12,7 +12,8 @@
 #if defined(OgreBitesQt_EXPORTS)
 #  define _OgreBitesQtExport Q_DECL_EXPORT
 #else
-#  define _OgreBitesQtExport Q_DECL_IMPORT
+//#  define _OgreBitesQtExport Q_DECL_IMPORT
+#  define _OgreBitesQtExport
 #endif
 
 namespace OgreBites

@@ -14,3 +14,4 @@ include(CMake/ConfigureBuild.cmake)
 
 add_subdirectory(OgreMain)
 add_subdirectory(Components)
+add_subdirectory(RenderSystems)

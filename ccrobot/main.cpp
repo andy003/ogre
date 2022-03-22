@@ -9,24 +9,27 @@
  ***********************************************************************************************************************
  */
 
-#include <Ogre.h>
-#include <OgreApplicationContextQt.h>
+#include <cstdio>
+#include "main_menu.h"
 
 #include <QApplication>
 
-class MyApp : public OgreBites::ApplicationContextQt
-{
-
-};
 
 int main(int argc, char* argv[])
 {
-    MyApp my_app;
+    try
+    {
+        QApplication app(argc, argv);
 
-    my_app.initApp();
-    my_app.startTimer(40);
+        MyApp my_app;
+        my_app.initApp();
+        my_app.startTimer(40);
+        return QApplication::exec();
+    }
+    catch (const Ogre::Exception& err)
+    {
+        printf("err------------------- %s\n", err.what());
+    }
 
-    QApplication app(argc, argv);
-
-    return QApplication::exec();
+    return -1;
 }

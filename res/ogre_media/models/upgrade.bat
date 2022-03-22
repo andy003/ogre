@@ -1,0 +1,4 @@
+OgreMeshUpgrader.exe rviz_cone.mesh
+OgreMeshUpgrader.exe rviz_cube.mesh
+OgreMeshUpgrader.exe rviz_cylinder.mesh
+OgreMeshUpgrader.exe rviz_sphere.mesh

@@ -20,7 +20,12 @@ set(OGRE_SET_THREAD_PROVIDER 4)
 set(OGRE_RESOURCEMANAGER_STRICT 2)
 set(OGRE_NO_VIEWPORT_ORIENTATIONMODE 1)
 
+set(OGRE_STATIC_LIB TRUE)
+set(OGRE_NO_QUAD_BUFFER_STEREO 1)
+
 set(RTSHADER_SYSTEM_BUILD_CORE_SHADERS TRUE)
+set(OGRE_BUILD_RENDERSYSTEM_GL TRUE)
+set(OGRE_BUILD_RENDERSYSTEM_GL3PLUS TRUE)
 
 # generate OgreBuildSettings.h
 configure_file(${OGRE_TEMPLATES_DIR}/OgreComponents.h.in ${PROJECT_BINARY_DIR}/include/OgreComponents.h @ONLY)
@@ -28,4 +33,5 @@ configure_file(${OGRE_TEMPLATES_DIR}/OgreBuildSettings.h.in ${PROJECT_BINARY_DIR
 configure_file(${OGRE_TEMPLATES_DIR}/OgreRTShaderConfig.h.in ${PROJECT_BINARY_DIR}/include/OgreRTShaderConfig.h @ONLY)
 #configure_file(${OGRE_TEMPLATES_DIR}/OgreGLES2Config.h.in ${PROJECT_BINARY_DIR}/include/OgreGLES2Config.h @ONLY)
 
+set(CMAKE_INSTALL_PREFIX ${EXECUTABLE_OUTPUT_PATH})
 configure_file(${OGRE_TEMPLATES_DIR}/OgreConfigPaths.h.in ${PROJECT_BINARY_DIR}/include/OgreConfigPaths.h @ONLY)
