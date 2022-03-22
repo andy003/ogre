@@ -424,7 +424,7 @@ void ApplicationContextBase::locateResources()
     cf.load(apk->open(resourcesPath));
 #else
 
-    if (Ogre::FileSystemLayer::fileExists(resourcesPath) || OGRE_PLATFORM == OGRE_PLATFORM_EMSCRIPTEN)
+    if (Ogre::FileSystemLayer::fileExists(resourcesPath))
     {
         Ogre::LogManager::getSingleton().logMessage("Parsing '"+resourcesPath+"'");
         cf.load(resourcesPath);

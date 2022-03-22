@@ -11,6 +11,8 @@
 #include <OgreCameraMan.h>
 
 #include <ogre_helper/axes.h>
+#include <ogre_helper/arrow.h>
+#include <ogre_helper/grid.h>
 
 class MyApp : public OgreBites::ApplicationContextQt, public OgreBites::InputListener
 {
@@ -26,9 +28,77 @@ public:
     {
         Ogre::String pluginsPath;
 
-        mRoot = OGRE_NEW Ogre::Root("", "./ogre.cfg", "./ogre.log");
+        mRoot = OGRE_NEW Ogre::Root("", "../res/ogre.cfg", "./ogre.log");
         mStaticPluginLoader.load();
         mOverlaySystem = OGRE_NEW Ogre::OverlaySystem();
+    }
+
+    void locateResources() override
+    {
+        auto& rgm = Ogre::ResourceGroupManager::getSingleton();
+        // load resource paths from config file
+        Ogre::ConfigFile cf;
+        Ogre::String resourcesPath = mFSLayer->getConfigFilePath("resources.cfg");
+
+        if (Ogre::FileSystemLayer::fileExists(resourcesPath))
+        {
+            Ogre::LogManager::getSingleton().logMessage("Parsing '"+resourcesPath+"'");
+            cf.load(resourcesPath);
+        }
+        else
+        {
+            rgm.addResourceLocation(getDefaultMediaDir(), "FileSystem", Ogre::RGN_DEFAULT);
+        }
+
+        Ogre::String sec, type, arch;
+        // go through all specified resource groups
+        Ogre::ConfigFile::SettingsBySection_::const_iterator seci;
+        for(seci = cf.getSettingsBySection().begin(); seci != cf.getSettingsBySection().end(); ++seci) {
+            sec = seci->first;
+            const Ogre::ConfigFile::SettingsMultiMap& settings = seci->second;
+            Ogre::ConfigFile::SettingsMultiMap::const_iterator i;
+
+            // go through all resource paths
+            for (i = settings.begin(); i != settings.end(); i++)
+            {
+                type = i->first;
+                arch = i->second;
+
+                Ogre::StringUtil::trim(arch);
+                if (arch.empty() || arch[0] == '.')
+                {
+                    // resolve relative path with regards to configfile
+                    Ogre::String baseDir, filename;
+                    Ogre::StringUtil::splitFilename(resourcesPath, filename, baseDir);
+                    arch = baseDir + arch;
+                }
+
+                arch = Ogre::FileSystemLayer::resolveBundlePath(arch);
+
+#if OGRE_PLATFORM != OGRE_PLATFORM_EMSCRIPTEN
+                if((type == "Zip" || type == "FileSystem") && !Ogre::FileSystemLayer::fileExists(arch))
+                {
+                    Ogre::LogManager::getSingleton().logWarning("resource location '"+arch+"' does not exist - skipping");
+                    continue;
+                }
+#endif
+                rgm.addResourceLocation(arch, type, sec);
+            }
+        }
+
+        if(rgm.getResourceLocationList(Ogre::RGN_INTERNAL).empty())
+        {
+            const auto& mediaDir = getDefaultMediaDir();
+            // add default locations
+            rgm.addResourceLocation(mediaDir + "/Main", "FileSystem", Ogre::RGN_INTERNAL);
+#ifdef OGRE_BUILD_COMPONENT_TERRAIN
+            rgm.addResourceLocation(mediaDir + "/Terrain", "FileSystem", Ogre::RGN_INTERNAL);
+#endif
+#ifdef OGRE_BUILD_COMPONENT_RTSHADERSYSTEM
+            rgm.addResourceLocation(mediaDir + "/RTShaderLib/GLSL", "FileSystem", Ogre::RGN_INTERNAL);
+            rgm.addResourceLocation(mediaDir + "/RTShaderLib/HLSL_Cg", "FileSystem", Ogre::RGN_INTERNAL);
+#endif
+        }
     }
 
     void setup() override
@@ -60,19 +130,23 @@ public:
 
         // create the camera
         Ogre::Camera* cam = scnMgr->createCamera("myCam");
-        cam->setNearClipDistance(5); // specific to this sample
+        cam->setNearClipDistance(5);    // specific to this sample
         cam->setAutoAspectRatio(true);
         camNode->attachObject(cam);
         camera_man_ = new OgreBites::CameraMan(camNode);
         camera_man_->setStyle(OgreBites::CS_ORBIT);
 
-        Axes* axes = new Axes(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode());
+        //        Axes* axes = new Axes(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode());
+
+        auto* arrow = new Arrow(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode());
+        arrow->setColor(Ogre::ColourValue(1.0, 0.0, 0.0, 1.0));
+
+        auto* grid = new Grid(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode(), Grid::Lines, 30, 1, 1,
+                              Ogre::ColourValue(1.0, 1.0, 0.0, 1.0));
 
         // and tell it to render into the main window
         Ogre::Viewport* vp = getRenderWindow()->addViewport(cam);
-        vp->setBackgroundColour(Ogre::ColourValue(1.0, 0.12, 0.12, 1.0));
-
-
+        vp->setBackgroundColour(Ogre::ColourValue(0.12, 0.12, 0.12, 1.0));
     }
 
     bool mouseMoved(const OgreBites::MouseMotionEvent& evt) override

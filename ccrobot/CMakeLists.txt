@@ -18,8 +18,17 @@ add_executable(ccrobot
         ogre_helper/shape.cpp
         ogre_helper/object.cpp
         ogre_helper/axes.cpp
+        ogre_helper/arrow.cpp
+#        ogre_helper/movable_text.cpp
+        ogre_helper/grid.cpp
+        ogre_helper/billboard_line.cpp
+
+        robot/robot.cpp
+        robot/robot_link.cpp
+        robot/robot_joint.cpp
         )
-target_link_libraries(ccrobot PRIVATE OgreMain OgreBitesQt OgreOverlay)
+
+target_link_libraries(ccrobot PRIVATE OgreMain OgreBitesQt OgreOverlay urdf)
 target_include_directories(ccrobot PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (WIN32)
