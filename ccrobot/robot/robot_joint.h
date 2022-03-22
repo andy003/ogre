@@ -36,35 +36,21 @@
 #include <QObject>
 
 #ifndef Q_MOC_RUN
-#include "OgreVector3.h"
-#include "OgreQuaternion.h"
-#include "OgreAny.h"
-#include "OgreMaterial.h"
+#include <Ogre.h>
 #endif
 
 #include "urdf/model.h"
 #include "urdf_model/pose.h"
 
-#include "rviz/ogre_helpers/object.h"
-#include "rviz/selection/forwards.h"
+#include <ogre_helper/object.h>
+//#include "rviz/selection/forwards.h"
 
-namespace Ogre
-{
-class SceneManager;
-class Entity;
-class SubEntity;
-class SceneNode;
-class Vector3;
-class Quaternion;
-class Any;
-class RibbonTrail;
-}    // namespace Ogre
-
-namespace rviz
-{
 class Shape;
 class Arrow;
 class Axes;
+
+namespace rviz
+{
 class DisplayContext;
 class FloatProperty;
 class Property;
@@ -83,6 +69,7 @@ class StringProperty;
 class RobotJoint : public QObject
 {
     Q_OBJECT
+
 public:
     RobotJoint(Robot* robot, const urdf::JointConstSharedPtr& joint);
     ~RobotJoint() override;
@@ -100,14 +87,6 @@ public:
     const std::string& getChildLinkName() const
     {
         return child_link_name_;
-    }
-    const Property* getJointProperty() const
-    {
-        return joint_property_;
-    }
-    Property* getJointProperty()
-    {
-        return joint_property_;
     }
     RobotJoint* getParentJoint();
     void hideSubProperties(bool hide);
@@ -174,19 +153,6 @@ protected:
     std::string parent_link_name_;
     std::string child_link_name_;
 
-    // properties
-    Property* joint_property_;
-    Property* details_;
-    VectorProperty* position_property_;
-    QuaternionProperty* orientation_property_;
-    Property* axes_property_;
-    // The joint axis if any, as opposed to the frame in which the joint exists above
-    VectorProperty* axis_property_;
-    Property* show_axis_property_;
-    StringProperty* type_property_;
-    FloatProperty* lower_limit_property_;
-    FloatProperty* upper_limit_property_;
-
 private:
     Ogre::Vector3 joint_origin_pos_;
     Ogre::Quaternion joint_origin_rot_;
@@ -200,4 +166,4 @@ private:
 
 }    // namespace rviz
 
-#endif    // RVIZ_ROBOT_LINK_H
+#endif    // RVIZ_ROBOT_JOINT_H
