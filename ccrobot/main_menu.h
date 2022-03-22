@@ -66,12 +66,13 @@ public:
         camera_man_ = new OgreBites::CameraMan(camNode);
         camera_man_->setStyle(OgreBites::CS_ORBIT);
 
+        Axes* axes = new Axes(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode());
+
         // and tell it to render into the main window
         Ogre::Viewport* vp = getRenderWindow()->addViewport(cam);
         vp->setBackgroundColour(Ogre::ColourValue(1.0, 0.12, 0.12, 1.0));
 
 
-        Axes axes(scnMgr, scnMgr->getRootSceneNode()->createChildSceneNode());
     }
 
     bool mouseMoved(const OgreBites::MouseMotionEvent& evt) override
