@@ -33,93 +33,109 @@ THE SOFTWARE.
 #include "OgreRenderOperation.h"
 #include "OgreGLGpuProgram.h"
 
-namespace Ogre {
-    namespace GLSL {
-    class _OgreGLExport GLSLProgram : public GLSLShaderCommon, public GLGpuProgramBase
+namespace Ogre
+{
+namespace GLSL
+{
+class _OgreGLExport GLSLProgram : public GLSLShaderCommon, public GLGpuProgramBase
+{
+public:
+    GLSLProgram(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group, bool isManual,
+                ManualResourceLoader* loader);
+    ~GLSLProgram() override;
+
+    void attachToProgramObject(uint programObject) override;
+    void detachFromProgramObject(uint programObject) override;
+
+    /// Overridden from GpuProgram
+    const String& getLanguage() const override;
+
+    bool getPassTransformStates() const override
     {
-    public:
-        GLSLProgram(ResourceManager* creator, 
-            const String& name, ResourceHandle handle,
-            const String& group, bool isManual, ManualResourceLoader* loader);
-        ~GLSLProgram();
+        return mPassFFPStates;
+    }
+    bool getPassSurfaceAndLightStates() const override
+    {
+        return mPassFFPStates;
+    }
+    bool getPassFogStates() const override
+    {
+        return mPassFFPStates;
+    }
 
-        void attachToProgramObject( const uint programObject );
-        void detachFromProgramObject( const uint programObject );
+    /** Returns the operation type that this geometry program expects to
+        receive as input
+    */
+    RenderOperation::OperationType getInputOperationType() const
+    {
+        return mInputOperationType;
+    }
+    /** Returns the operation type that this geometry program will emit
+     */
+    RenderOperation::OperationType getOutputOperationType() const
+    {
+        return mOutputOperationType;
+    }
+    /** Returns the maximum number of vertices that this geometry program can
+        output in a single run
+    */
+    int getMaxOutputVertices() const
+    {
+        return mMaxOutputVertices;
+    }
 
-        /// Overridden from GpuProgram
-        const String& getLanguage(void) const;
-
-        bool getPassTransformStates(void) const {
-            return mPassFFPStates;
-        }
-        bool getPassSurfaceAndLightStates(void) const {
-            return mPassFFPStates;
-        }
-        bool getPassFogStates(void) const {
-            return mPassFFPStates;
-        }
-
-        /** Returns the operation type that this geometry program expects to
-            receive as input
-        */
-        RenderOperation::OperationType getInputOperationType(void) const
-        { return mInputOperationType; }
-        /** Returns the operation type that this geometry program will emit
-        */
-        RenderOperation::OperationType getOutputOperationType(void) const
-        { return mOutputOperationType; }
-        /** Returns the maximum number of vertices that this geometry program can
-            output in a single run
-        */
-        int getMaxOutputVertices(void) const { return mMaxOutputVertices; }
-
-        /** Sets the operation type that this geometry program expects to receive
-        */
-        void setInputOperationType(RenderOperation::OperationType operationType)
-        { mInputOperationType = operationType; }
-        /** Set the operation type that this geometry program will emit
-        */
-        void setOutputOperationType(RenderOperation::OperationType operationType)
+    /** Sets the operation type that this geometry program expects to receive
+     */
+    void setInputOperationType(RenderOperation::OperationType operationType)
+    {
+        mInputOperationType = operationType;
+    }
+    /** Set the operation type that this geometry program will emit
+     */
+    void setOutputOperationType(RenderOperation::OperationType operationType)
+    {
+        switch (operationType)
         {
-            switch (operationType)
-            {
             case RenderOperation::OT_POINT_LIST:
             case RenderOperation::OT_LINE_STRIP:
             case RenderOperation::OT_TRIANGLE_STRIP:
                 break;
             default:
-                OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR,
-                            "Geometry shader output operation type can only be point list,"
-                            "line strip or triangle strip");
-            }
-
-            mOutputOperationType = operationType;
+                OGRE_EXCEPT(Exception::ERR_RENDERINGAPI_ERROR, "Geometry shader output operation type can only be "
+                                                               "point list,"
+                                                               "line strip or triangle strip");
         }
-        /** Set the maximum number of vertices that a single run of this geometry program
-            can emit.
-        */
-        void setMaxOutputVertices(int maxOutputVertices)
-        { mMaxOutputVertices = maxOutputVertices; }
 
-        void bindProgram();
-        void unbindProgram();
-        void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask);
-        bool isAttributeValid(VertexElementSemantic semantic, uint index);
-    protected:
-        void loadFromSource();
-        /// Internal unload implementation, must be implemented by subclasses
-        void unloadHighLevelImpl(void);
-
-        /// Populate the passed parameters with name->index map, must be overridden
-        void buildConstantDefinitions() override;
-
-        // legacy GL_EXT_geometry_shader4 functionality
-        RenderOperation::OperationType mInputOperationType;
-        RenderOperation::OperationType mOutputOperationType;
-        int mMaxOutputVertices;
-        bool mPassFFPStates;
-    };
+        mOutputOperationType = operationType;
     }
-}
+    /** Set the maximum number of vertices that a single run of this geometry program
+        can emit.
+    */
+    void setMaxOutputVertices(int maxOutputVertices)
+    {
+        mMaxOutputVertices = maxOutputVertices;
+    }
 
-#endif // __GLSLProgram_H__
+    void bindProgram() override;
+    void unbindProgram() override;
+    void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask) override;
+    bool isAttributeValid(VertexElementSemantic semantic, uint index) override;
+
+protected:
+    void loadFromSource() override;
+    /// Internal unload implementation, must be implemented by subclasses
+    void unloadHighLevelImpl() override;
+
+    /// Populate the passed parameters with name->index map, must be overridden
+    void buildConstantDefinitions() override;
+
+    // legacy GL_EXT_geometry_shader4 functionality
+    RenderOperation::OperationType mInputOperationType;
+    RenderOperation::OperationType mOutputOperationType;
+    int mMaxOutputVertices;
+    bool mPassFFPStates;
+};
+}    // namespace GLSL
+}    // namespace Ogre
+
+#endif    // __GLSLProgram_H__
