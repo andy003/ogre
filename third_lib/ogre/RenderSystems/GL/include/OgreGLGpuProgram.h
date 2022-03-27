@@ -33,60 +33,58 @@ THE SOFTWARE.
 #include "OgreGpuProgram.h"
 #include "OgreHardwareVertexBuffer.h"
 
-namespace Ogre {
+namespace Ogre
+{
 
-    struct GLGpuProgramBase
-    {
-        virtual ~GLGpuProgramBase() {}
-        /// Execute the binding functions for this program
-        virtual void bindProgram(void) = 0;
-        /// Execute the binding functions for this program
-        virtual void unbindProgram(void) = 0;
-        /// Execute the param binding functions for this program
-        virtual void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask) = 0;
-        /// Test whether attribute index for a given semantic is valid
-        virtual bool isAttributeValid(VertexElementSemantic semantic, uint index);
-    };
+struct GLGpuProgramBase
+{
+    virtual ~GLGpuProgramBase() = default;
+    /// Execute the binding functions for this program
+    virtual void bindProgram() = 0;
+    /// Execute the binding functions for this program
+    virtual void unbindProgram() = 0;
+    /// Execute the param binding functions for this program
+    virtual void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask) = 0;
+    /// Test whether attribute index for a given semantic is valid
+    virtual bool isAttributeValid(VertexElementSemantic semantic, uint index);
+};
 
-    /** Generalised low-level GL program, can be applied to multiple types (eg ARB and NV) */
-    class _OgreGLExport GLGpuProgram : public GpuProgram, public GLGpuProgramBase
-    {
-    public:
-        GLGpuProgram(ResourceManager* creator, const String& name, ResourceHandle handle,
-            const String& group, bool isManual = false, ManualResourceLoader* loader = 0);
-        virtual ~GLGpuProgram();
-    protected:
+/** Generalised low-level GL program, can be applied to multiple types (eg ARB and NV) */
+class _OgreGLExport GLGpuProgram : public GpuProgram, public GLGpuProgramBase
+{
+public:
+    GLGpuProgram(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group,
+                 bool isManual = false, ManualResourceLoader* loader = nullptr);
+    ~GLGpuProgram() override;
 
-        GLuint mProgramID;
-    };
+protected:
+    GLuint mProgramID;
+};
 
-    /** Specialisation of the GL low-level program for ARB programs. */
-    class _OgreGLExport GLArbGpuProgram : public GLGpuProgram
-    {
-    public:
-        GLArbGpuProgram(ResourceManager* creator, const String& name, ResourceHandle handle,
-            const String& group, bool isManual = false, ManualResourceLoader* loader = 0);
-        virtual ~GLArbGpuProgram();
+/** Specialisation of the GL low-level program for ARB programs. */
+class _OgreGLExport GLArbGpuProgram : public GLGpuProgram
+{
+public:
+    GLArbGpuProgram(ResourceManager* creator, const String& name, ResourceHandle handle, const String& group,
+                    bool isManual = false, ManualResourceLoader* loader = nullptr);
+    ~GLArbGpuProgram() override;
 
-        /// Execute the binding functions for this program
-        void bindProgram(void);
-        /// Execute the unbinding functions for this program
-        void unbindProgram(void);
-        /// Execute the param binding functions for this program
-        void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask);
+    /// Execute the binding functions for this program
+    void bindProgram() override;
+    /// Execute the unbinding functions for this program
+    void unbindProgram() override;
+    /// Execute the param binding functions for this program
+    void bindProgramParameters(GpuProgramParametersSharedPtr params, uint16 mask) override;
 
-        /// Get the GL type for the program
-        GLenum getProgramType(void) const;
+    /// Get the GL type for the program
+    GLenum getProgramType() const;
 
-    protected:
-        void loadFromSource(void);
-        /// @copydoc Resource::unloadImpl
-        void unloadImpl(void);
+protected:
+    void loadFromSource() override;
+    /// @copydoc Resource::unloadImpl
+    void unloadImpl() override;
+};
 
-    };
+}    // namespace Ogre
 
-
-
-} // namespace Ogre
-
-#endif // __GLGpuProgram_H__
+#endif    // __GLGpuProgram_H__

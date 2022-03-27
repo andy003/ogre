@@ -38,60 +38,60 @@ namespace Ogre
     class CmdType : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdSyntax : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdSkeletal : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdMorph : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdPose : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdVTF : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdManualNamedConstsFile : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     class CmdAdjacency : public ParamCommand
     {
     public:
-        String doGet(const void* target) const;
-        void doSet(void* target, const String& val);
+        String doGet(const void* target) const override;
+        void doSet(void* target, const String& val) override;
     };
     // Command object for setting / getting parameters
-    static CmdType msTypeCmd;
-    static CmdSyntax msSyntaxCmd;
-    static CmdSkeletal msSkeletalCmd;
-    static CmdMorph msMorphCmd;
-    static CmdPose msPoseCmd;
-    static CmdVTF msVTFCmd;
-    static CmdManualNamedConstsFile msManNamedConstsFileCmd;
-    static CmdAdjacency msAdjacencyCmd;
+    CmdType msTypeCmd;
+    CmdSyntax msSyntaxCmd;
+    CmdSkeletal msSkeletalCmd;
+    CmdMorph msMorphCmd;
+    CmdPose msPoseCmd;
+    CmdVTF msVTFCmd;
+    CmdManualNamedConstsFile msManNamedConstsFileCmd;
+    CmdAdjacency msAdjacencyCmd;
     }
 
     //-----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ namespace Ogre
         return FastHash(mSource.c_str(), mSource.size(), hash);
     }
 
-    size_t GpuProgram::calculateSize(void) const
+    size_t GpuProgram::calculateSize() const
     {
         size_t memSize = sizeof(*this);
         memSize += mManualNamedConstantsFile.size() * sizeof(char);
@@ -184,7 +184,7 @@ namespace Ogre
         }
     }
 
-    void GpuProgram::loadImpl(void)
+    void GpuProgram::loadImpl()
     {
         if(mCompileError)
             return;
@@ -226,7 +226,7 @@ namespace Ogre
     }
 
     //-----------------------------------------------------------------------------
-    bool GpuProgram::isRequiredCapabilitiesSupported(void) const
+    bool GpuProgram::isRequiredCapabilitiesSupported() const
     {
         const RenderSystemCapabilities* caps = 
             Root::getSingleton().getRenderSystem()->getCapabilities();
@@ -250,12 +250,12 @@ namespace Ogre
         return true;
     }
     //-----------------------------------------------------------------------------
-    bool GpuProgram::isSupported(void) const
+    bool GpuProgram::isSupported() const
     {
         if (mCompileError || !isRequiredCapabilitiesSupported())
             return false;
 
-        return GpuProgramManager::getSingleton().isSyntaxSupported(mSyntaxCode);
+        return GpuProgramManager::isSyntaxSupported(mSyntaxCode);
     }
     //---------------------------------------------------------------------
     void GpuProgram::createParameterMappingStructures(bool recreateIfExists)
@@ -309,7 +309,7 @@ namespace Ogre
 
     }
     //-----------------------------------------------------------------------------
-    GpuProgramParametersSharedPtr GpuProgram::createParameters(void)
+    GpuProgramParametersSharedPtr GpuProgram::createParameters()
     {
         // Default implementation simply returns standard parameters.
         GpuProgramParametersSharedPtr ret = 
@@ -353,7 +353,7 @@ namespace Ogre
         return ret;
     }
     //-----------------------------------------------------------------------------
-    const GpuProgramParametersPtr& GpuProgram::getDefaultParameters(void)
+    const GpuProgramParametersPtr& GpuProgram::getDefaultParameters()
     {
         if (!mDefaultParams)
         {
@@ -362,7 +362,7 @@ namespace Ogre
         return mDefaultParams;
     }
     //-----------------------------------------------------------------------------
-    const String GpuProgram::getProgramTypeName(GpuProgramType programType)
+    String GpuProgram::getProgramTypeName(GpuProgramType programType)
     {
         switch (programType)
         {
@@ -385,7 +385,7 @@ namespace Ogre
         }
     }
     //-----------------------------------------------------------------------------
-    void GpuProgram::setupBaseParamDictionary(void)
+    void GpuProgram::setupBaseParamDictionary()
     {
         ParamDictionary* dict = getParamDictionary();
 
@@ -421,7 +421,7 @@ namespace Ogre
     }
 
     //-----------------------------------------------------------------------
-    const String& GpuProgram::getLanguage(void) const
+    const String& GpuProgram::getLanguage() const
     {
         static const String language = "asm";
 
@@ -431,12 +431,12 @@ namespace Ogre
     //-----------------------------------------------------------------------
     String CmdType::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return GpuProgram::getProgramTypeName(t->getType()) + "_program";
     }
     void CmdType::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         if (val == "vertex_program")
         {
             t->setType(GPT_VERTEX_PROGRAM);
@@ -465,80 +465,80 @@ namespace Ogre
     //-----------------------------------------------------------------------
     String CmdSyntax::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return t->getSyntaxCode();
     }
     void CmdSyntax::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setSyntaxCode(val);
     }
     //-----------------------------------------------------------------------
     String CmdSkeletal::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return StringConverter::toString(t->isSkeletalAnimationIncluded());
     }
     void CmdSkeletal::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setSkeletalAnimationIncluded(StringConverter::parseBool(val));
     }
     //-----------------------------------------------------------------------
     String CmdMorph::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return StringConverter::toString(t->isMorphAnimationIncluded());
     }
     void CmdMorph::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setMorphAnimationIncluded(StringConverter::parseBool(val));
     }
     //-----------------------------------------------------------------------
     String CmdPose::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return StringConverter::toString(t->getNumberOfPosesIncluded());
     }
     void CmdPose::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setPoseAnimationIncluded((ushort)StringConverter::parseUnsignedInt(val));
     }
     //-----------------------------------------------------------------------
     String CmdVTF::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return StringConverter::toString(t->isVertexTextureFetchRequired());
     }
     void CmdVTF::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setVertexTextureFetchRequired(StringConverter::parseBool(val));
     }
     //-----------------------------------------------------------------------
     String CmdManualNamedConstsFile::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return t->getManualNamedConstantsFile();
     }
     void CmdManualNamedConstsFile::doSet(void* target, const String& val)
     {
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         t->setManualNamedConstantsFile(val);
     }
     //-----------------------------------------------------------------------
     String CmdAdjacency::doGet(const void* target) const
     {
-        const GpuProgram* t = static_cast<const GpuProgram*>(target);
+        const auto* t = static_cast<const GpuProgram*>(target);
         return StringConverter::toString(t->isAdjacencyInfoRequired());
     }
     void CmdAdjacency::doSet(void* target, const String& val)
     {
         LogManager::getSingleton().logWarning("'uses_adjacency_information' is deprecated. "
         "Set the respective RenderOperation::OpertionType instead.");
-        GpuProgram* t = static_cast<GpuProgram*>(target);
+        auto* t = static_cast<GpuProgram*>(target);
         OGRE_IGNORE_DEPRECATED_BEGIN
         t->setAdjacencyInfoRequired(StringConverter::parseBool(val));
         OGRE_IGNORE_DEPRECATED_END

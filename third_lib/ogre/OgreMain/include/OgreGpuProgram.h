@@ -143,7 +143,7 @@ namespace Ogre {
     GpuProgram(ResourceManager* creator, const String& name, ResourceHandle handle,
                const String& group, bool isManual = false, ManualResourceLoader* loader = 0);
 
-    static const String getProgramTypeName(GpuProgramType programType);
+    static String getProgramTypeName(GpuProgramType programType);
 
     virtual ~GpuProgram() {}
 

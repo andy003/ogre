@@ -28,9 +28,7 @@ THE SOFTWARE.
 
 #include "OgreGLGpuProgram.h"
 #include "OgreException.h"
-#include "OgreStringConverter.h"
 #include "OgreLogManager.h"
-#include "OgreGLSLProgramCommon.h"
 
 namespace Ogre {
 
@@ -99,16 +97,16 @@ GLArbGpuProgram::~GLArbGpuProgram()
 {
     // have to call this here reather than in Resource destructor
     // since calling virtual methods in base destructors causes crash
-    unload(); 
+    unload();
 }
 
-void GLArbGpuProgram::bindProgram(void)
+void GLArbGpuProgram::bindProgram()
 {
     glEnable(getProgramType());
     glBindProgramARB(getProgramType(), mProgramID);
 }
 
-void GLArbGpuProgram::unbindProgram(void)
+void GLArbGpuProgram::unbindProgram()
 {
     glBindProgramARB(getProgramType(), 0);
     glDisable(getProgramType());
@@ -126,7 +124,7 @@ void GLArbGpuProgram::bindProgramParameters(GpuProgramParametersSharedPtr params
     {
         if (i->second.variability & mask)
         {
-            GLuint logicalIndex = static_cast<GLuint>(i->first);
+            auto logicalIndex = static_cast<GLuint>(i->first);
             const float* pFloat = params->getFloatPointer(i->second.physicalIndex);
             // Iterate over the params, set in 4-float chunks (low-level)
             for (size_t j = 0; j < i->second.currentSize; j+=4)
@@ -139,16 +137,15 @@ void GLArbGpuProgram::bindProgramParameters(GpuProgramParametersSharedPtr params
     }
 }
 
-void GLArbGpuProgram::unloadImpl(void)
+void GLArbGpuProgram::unloadImpl()
 {
     glDeleteProgramsARB(1, &mProgramID);
 }
 
-void GLArbGpuProgram::loadFromSource(void)
+void GLArbGpuProgram::loadFromSource()
 {
     if (GL_INVALID_OPERATION == glGetError()) {
         LogManager::getSingleton().logMessage("Invalid Operation before loading program "+mName, LML_CRITICAL);
-
     }
     glBindProgramARB(getProgramType(), mProgramID);
     glProgramStringARB(getProgramType(), GL_PROGRAM_FORMAT_ASCII_ARB, (GLsizei)mSource.length(), mSource.c_str());
@@ -162,6 +159,4 @@ void GLArbGpuProgram::loadFromSource(void)
     }
     glBindProgramARB(getProgramType(), 0);
 }
-
-    
 }
